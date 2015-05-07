@@ -1,0 +1,40 @@
+html{
+  color: black;
+  font-family: Arial, sans-serif;
+  font-size: 100%;
+  font-style: inherit;
+  font-weight: inherit;
+  text-align: center;    
+}
+
+em, #table{
+  font-style: italic;
+}
+
+h1{
+  margin: 0 auto;  
+  font-size: 200%;   
+}
+
+#table div{  
+  background: lightgrey;
+  margin: 1px;  
+  padding: 10px 10px;
+  text-align: right;
+  float: left;
+}
+
+
+input{
+  padding: 10px 10px;
+  text-align: center;
+  font-size: 200%;
+  width: 200px;
+  margin: 50px auto;  
+}
+
+#errors{
+  background: lightCoral;
+  color: red;
+}
+
