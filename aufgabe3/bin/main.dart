@@ -1,8 +1,8 @@
 // Copyright (c) 2015, <your name>. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
-/*
 
-import 'dart:async';*/
+
+import 'dart:async';
 
 //import 'dart:io';
 import 'package:html5lib/parser.dart';// show parse;
@@ -11,19 +11,21 @@ import 'package:http/http.dart' as http;
 
 
 main() async {
-  String url = "";
+  String url = "", urlHtml = "";
   bool valid = false;
+  int maxBytes = 0;
   print("Bitte geben Sie die URL ein, die sie auf ihre Bildgrößen untersuchen möchten:");  
   
   do {    
-    //url = "http://www.nkode.io";//"http://www.education.gov.yk.ca/pdf/pdf-test.pdf";//"http://www.nkode.io";//stdin.readLineSync();
-    url = "http://www.heise.de/newsticker/meldung/Root-Shell-im-Krankenhaus-Hospira-Infusionspumpe-mit-Telnet-Luecke-2633529.html?wt_mc=rss.ho.beitrag.rdf";
+    //url = "http://www.nkode.io";//"http://www.education.gov.yk.ca/pdf/pdf-test.pdf";////stdin.readLineSync();
+    url = "http://www.nkode.io";
     //Überprüfen der URL
     await http.get(url).then( (e) {      
       //Abfrage, ob url-type html ist
       if( e.headers["content-type"].contains("html") ){
         valid = true;
-        url = e.body;
+        urlHtml = e.body;
+        maxBytes = e.body.length;
       }
       else{
         valid = false;
@@ -35,21 +37,32 @@ main() async {
       print("sinnlose Eingabe\nURL '$url' konnte nicht verarbeitet werden.");
     });    
   }while( !valid );
-   /*
+   
    //Auslesen des Dom-trees    
-    var document = parse(url);
-    List<Element> images = document.querySelectorAll("img");
+    var document = parse(urlHtml);  
+    Map<String, int> images = new Map();
+    //sortieren
+    images.values.toList()..sort();
     
-    images.forEach( (e){
-      
-      images[0].attributes.;
-      
+    //ges. Uri
+    final uri = Uri.parse(url);
+        
+    var list = document.querySelectorAll("img[src]");
+   
+    
+    Future.forEach(list, (e)async{
+      final imageUri = uri.resolve( e.attributes["src"] );
+      final image = await http.get(imageUri);
+      images[e] = image.body.length;      
     });
-    */
+    
+    
+    
+    images.forEach( (s, i)=> print(s+" mit "+i.toString()));
     
 }
 
-  
+ 
   
   
 
