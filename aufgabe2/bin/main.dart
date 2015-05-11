@@ -4,6 +4,7 @@
  */
 
 import 'dart:html';
+import 'dart:math' as Math;
 
 
 void main() {
@@ -21,16 +22,16 @@ void main() {
         }
         else if( value > 100000){
          errors.innerHtml = "Wir berechnen nur Primzahlen bis 100000!";
-         table.innerHtml = calculate(100000);
+         table.innerHtml = getPrims(100000);
         }
         else{
          errors.innerHtml = "";
-         table.innerHtml = calculate(value);
+         table.innerHtml = getPrims(value);
        }
       }
       else{
         errors.innerHtml = "";
-        table.innerHtml = "<p>Und hier könnten Ihre Primzahlen stehen...</p>";  
+        table.innerHtml = "Und hier könnten Ihre Primzahlen stehen...";  
       }
     }catch(Exception){
       errors.innerHtml = "Bitte geben Sie eine positive ganze Zahl > 0 ein!";
@@ -40,35 +41,65 @@ void main() {
    
 }
 
-/**
- * alle Zahlen
- */
-List<int> list = <int>[];
-/**
- * Primzahlen
- */
-List<int> prims = <int>[];
 
-String calculate(int maxValue){
-    //Abbruch 
-   if(maxValue <= 1) {
-     return "";
-   }
-   //lösche alte Daten
-    list.clear();
+  /**
+   * Primzahlen
+   */
+  List<int> prims = <int>[];
+
+  /**
+   * 
+   */
+  List<bool> gestrichen = <bool>[];
+  
+  
+  /**
+   * Gibt die Primzahlen bis value in einer Html-Tabelle zurück
+   */
+  String getPrims(int value){
+    
+    //lösche alte Listen
     prims.clear();
-   // erzeuge alle Zahlen
-   for(int i = 2; i <= maxValue; i++){
-      list.add(i);
-   } 
-   while(list.length > 0){
-          prims.add(list.first);
-          int num = prims.last;
-          list.removeWhere((e)=>e % num == 0);      
+    gestrichen.clear();
+    
+    // alle auf false setzen
+    for(int i = 0; i <= value; i++){
+      gestrichen.add(false);
     }
-   //erzeuge TableString   
-   String str ="";
-   prims.forEach( (e) => str += "<div>"+"  "+e.toString()+"</div>");  
-   
-   return str;
- }
+        
+// siebe mit allen (prim) zahlen i 
+// wobei i der kleinste Primfaktor einer zusammengesetzten zahl j = i*k ist.
+// Der kleinste primfaktor einer zusammengesetzten Zahl j kann nicht größer als die wurzel von j <= n sein.
+  for(int i = 2; i < Math.sqrt(value); i++){
+    if( !gestrichen[i] ){
+      prims.add(i);
+      for(int a = i*i; a <= value; a += i){
+        gestrichen[a] = true;
+      }
+    }    
+  }
+    
+// gib die primzahlen größer als wurzel n aus. Also die, die noch nicht gestrichen wurden
+  for(int i = Math.sqrt(value).floor() + 1; i < value; i++){
+    if(!gestrichen[i]){
+      prims.add(i);
+    }
+  }
+    
+    //erzeuge TableString
+    var str = "<tr><td>"+prims.first.toString()+"</td>";  
+    for(int i = 1; i < prims.length; i++){
+       if(i % 13 == 0){
+           str += "</tr><td>"+prims[i].toString()+"</td>";
+       }
+       else{
+        str += "<td>"+prims[i].toString()+"</td>";
+      }
+     }
+
+    return "<table>"+str+"</tr></table>";
+  }  
+  
+  
+  
+        
