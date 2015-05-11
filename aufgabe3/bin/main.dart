@@ -47,7 +47,7 @@ main() async {
    
     Future.wait( list.map( (e)async{
       final imageUri = uri.resolve( e.attributes["src"] );
-      final image = await http.get(imageUri);
+      final image = await http.get(imageUri).catchError( ()=> images[imageUri.toString()] = 0);
       images[imageUri.toString()] = image.body.length;      
       return;
     }) ).then( (_){
