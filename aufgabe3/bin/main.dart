@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-//import 'dart:io';
+import 'dart:io';
 import 'package:html5lib/parser.dart';// show parse;
 import 'package:html5lib/dom.dart';
 import 'package:http/http.dart' as http;
@@ -12,20 +12,19 @@ import 'package:http/http.dart' as http;
 
 main() async {
   String url = "", urlHtml = "";
-  bool valid = false;
-  int maxBytes = 0;
+  bool valid = false; 
   print("Bitte geben Sie die URL ein, die sie auf ihre Bildgrößen untersuchen möchten:");  
   
   do {    
-    //url = "http://www.nkode.io";//"http://www.education.gov.yk.ca/pdf/pdf-test.pdf";////stdin.readLineSync();
-    url = "http://www.nkode.io";
+    //url = "http://www.nkode.io";//"http://www.education.gov.yk.ca/pdf/pdf-test.pdf";////
+    url = stdin.readLineSync();
+    print("");
     //Überprüfen der URL
     await http.get(url).then( (e) {      
       //Abfrage, ob url-type html ist
       if( e.headers["content-type"].contains("html") ){
         valid = true;
         urlHtml = e.body;
-        maxBytes = e.body.length;
       }
       else{
         valid = false;
@@ -41,24 +40,38 @@ main() async {
    //Auslesen des Dom-trees    
     var document = parse(urlHtml);  
     Map<String, int> images = new Map();
-    //sortieren
-    images.values.toList()..sort();
-    
     //ges. Uri
     final uri = Uri.parse(url);
-        
+    
     var list = document.querySelectorAll("img[src]");
    
-    
-    Future.forEach(list, (e)async{
+    Future.wait( list.map( (e)async{
       final imageUri = uri.resolve( e.attributes["src"] );
       final image = await http.get(imageUri);
-      images[e] = image.body.length;      
+      images[imageUri.toString()] = image.body.length;      
+      return;
+    }) ).then( (_){
+      
+      print("Die Analyse der Seite hat folgende zu ladende Bildgrößen ergeben:");
+        //sortieren
+        var test = images.values.toList()..sort();
+        int maxByte = 0;    
+        
+        test.reversed.forEach( (e){
+          maxByte += e;
+          images.forEach( (str,i){
+            if( i == e){
+              print(str+", Size: "+e.toString()+" bytes");
+            }
+          });
+          
+          });
+        
+        print("Total image data to load: $maxByte bytes");
     });
     
+   
     
-    
-    images.forEach( (s, i)=> print(s+" mit "+i.toString()));
     
 }
 
