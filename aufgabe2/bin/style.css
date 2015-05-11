@@ -16,12 +16,14 @@ h1{
   font-size: 200%;   
 }
 
-#table div{  
-  background: lightgrey;
-  margin: 1px;  
+#table table{
+  margin: auto;  
+}
+
+#table td{  
+  background: lightgrey;  
   padding: 10px 10px;
   text-align: right;
-  float: left;
 }
 
 
