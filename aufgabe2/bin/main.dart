@@ -57,7 +57,9 @@ void main() {
    * Gibt die Primzahlen bis value in einer Html-Tabelle zurück
    */
   String getPrims(int value){
-    
+    if(value <=1){
+      return "";
+    }
     //lösche alte Listen
     prims.clear();
     gestrichen.clear();
@@ -70,8 +72,8 @@ void main() {
 // siebe mit allen (prim) zahlen i 
 // wobei i der kleinste Primfaktor einer zusammengesetzten zahl j = i*k ist.
 // Der kleinste primfaktor einer zusammengesetzten Zahl j kann nicht größer als die wurzel von j <= n sein.
-  for(int i = 2; i < Math.sqrt(value); i++){
-    if( !gestrichen[i] ){
+  for(int i = 2; i <= Math.sqrt(value); i++){
+    if( !gestrichen.elementAt(2) ){
       prims.add(i);
       for(int a = i*i; a <= value; a += i){
         gestrichen[a] = true;
@@ -80,7 +82,7 @@ void main() {
   }
     
 // gib die primzahlen größer als wurzel n aus. Also die, die noch nicht gestrichen wurden
-  for(int i = Math.sqrt(value).floor() + 1; i < value; i++){
+  for(int i = Math.sqrt(value).floor() + 1; i <= value; i++){
     if(!gestrichen[i]){
       prims.add(i);
     }
