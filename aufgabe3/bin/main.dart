@@ -53,20 +53,13 @@ main() async {
     }) ).then( (_){
       
       print("Die Analyse der Seite hat folgende zu ladende Bildgrößen ergeben:");
-        //sortieren
-        var test = images.values.toList()..sort();
-        int maxByte = 0;    
-        
-        test.reversed.forEach( (e){
-          maxByte += e;
-          images.forEach( (str,i){
-            if( i == e){
-              print(str+", Size: "+e.toString()+" bytes");
-            }
-          });
-          
-          });
-        
+      int maxByte = 0;
+      var sortList = images.keys.toList()..sort((a,b)=> images[b] - images[a]);
+      sortList.forEach( (e) {
+        maxByte += images[e];
+        print( e.toString() + ", Size: "+images[e].toString()+" bytes");
+      });
+      
         print("Total image data to load: $maxByte bytes");
     });
     
