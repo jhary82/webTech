@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'dart:io';
-import 'package:html5lib/parser.dart';// show parse;
+import 'package:html5lib/parser.dart';
 import 'package:html5lib/dom.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,7 +48,7 @@ main() async {
     Future.wait( list.map( (e)async{
       final imageUri = uri.resolve( e.attributes["src"] );
       final image = await http.get(imageUri).catchError( ()=> images[imageUri.toString()] = 0);
-      images[imageUri.toString()] = image.body.length;      
+      images[imageUri.toString()] = (image != null)? image.body.length : 0;      
       return;
     }) ).then( (_){
       
