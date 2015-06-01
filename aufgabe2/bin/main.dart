@@ -17,24 +17,29 @@ void main() {
       if(!input.value.isEmpty){
         int value = int.parse(input.value);
         if(value < 0){
-         errors.innerHtml = "Bitte geben Sie eine positive ganze Zahl >0 ein!";
+         errors.innerHtml = "Bitte geben Sie eine positive ganze Zahl > 0 ein!";
+         errors.classes.clear();
          table.innerHtml = "";
         }
         else if( value > 100000){
          errors.innerHtml = "Wir berechnen nur Primzahlen bis 100000!";
+         errors.classes.clear();
          table.innerHtml = getPrims(100000);
         }
         else{
          errors.innerHtml = "";
+         errors.classes.add("notShow");
          table.innerHtml = getPrims(value);
        }
       }
       else{
         errors.innerHtml = "";
+        errors.classes.add("notShow");
         table.innerHtml = "Und hier könnten Ihre Primzahlen stehen...";  
       }
     }catch(Exception){
       errors.innerHtml = "Bitte geben Sie eine positive ganze Zahl > 0 ein!";
+      errors.classes.clear();
       table.innerHtml = "";      
      };
   });
@@ -73,7 +78,7 @@ void main() {
 // wobei i der kleinste Primfaktor einer zusammengesetzten zahl j = i*k ist.
 // Der kleinste primfaktor einer zusammengesetzten Zahl j kann nicht größer als die wurzel von j <= n sein.
   for(int i = 2; i <= Math.sqrt(value); i++){
-    if( !gestrichen.elementAt(2) ){
+    if( !gestrichen.elementAt(i) ){
       prims.add(i);
       for(int a = i*i; a <= value; a += i){
         gestrichen[a] = true;
