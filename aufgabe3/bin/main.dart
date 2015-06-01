@@ -33,7 +33,7 @@ main() async {
     }).catchError( (e) {
       //falsche url    
       valid = false;        
-      print("sinnlose Eingabe\nURL '$url' konnte nicht verarbeitet werden.");
+      print("URL '$url' konnte nicht verarbeitet werden.");
     });    
   }while( !valid );
    
@@ -48,7 +48,7 @@ main() async {
     Future.wait( list.map( (e)async{
       final imageUri = uri.resolve( e.attributes["src"] );
       final image = await http.get(imageUri).catchError( ()=> images[imageUri.toString()] = 0);
-      images[imageUri.toString()] = (image != null)? image.body.length : 0;      
+      images[imageUri.toString()] = (image != null)? image.body.length : 0;
       return;
     }) ).then( (_){
       
@@ -57,7 +57,12 @@ main() async {
       var sortList = images.keys.toList()..sort((a,b)=> images[b] - images[a]);
       sortList.forEach( (e) {
         maxByte += images[e];
-        print( e.toString() + ", Size: "+images[e].toString()+" bytes");
+        if( images[e] == 0){
+          print( e.toString() + ", Size: "+images[e].toString()+" bytes(Image konnte nicht geladen werden.)");
+        }
+        else{
+          print( e.toString() + ", Size: "+images[e].toString()+" bytes");
+        }
       });
       
         print("Total image data to load: $maxByte bytes");
